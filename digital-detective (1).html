@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Detective — Inglês na Cultura Digital</title>
+<meta name="description" content="Recurso Educacional Digital: jogo de leitura crítica em língua inglesa para os anos finais do Ensino Fundamental.">
+<style>
+  :root{
+    --ink:#182338;
+    --ink-deep:#0F1728;
+    --paper:#F3EAD3;
+    --paper-edge:#E2D3AE;
+    --amber:#E8A33D;
+    --amber-deep:#C57F1B;
+    --stamp-red:#C0452F;
+    --stamp-green:#2E7D4F;
+    --text-on-paper:#2B2417;
+    --text-dim:#8B93A7;
+    --card-radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--ink);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(232,163,61,.08), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(232,163,61,.05), transparent 50%);
+    color:#EDEAE0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    line-height:1.5;
+  }
+  .mono{font-family:"Courier New",Courier,monospace;letter-spacing:.06em;}
+  main{width:100%;max-width:520px;padding:20px 16px 40px;flex:1;}
+
+  /* ---------- header ---------- */
+  header{width:100%;max-width:520px;padding:18px 16px 6px;display:flex;align-items:center;gap:10px;}
+  .badge-mini{
+    width:38px;height:38px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--amber), var(--amber-deep));
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;flex-shrink:0;
+    box-shadow:0 0 0 3px rgba(232,163,61,.25);
+  }
+  header .htitle{font-weight:800;font-size:17px;letter-spacing:.02em;}
+  header .hsub{font-size:11px;color:var(--text-dim);}
+  .score-pill{
+    margin-left:auto;
+    font-size:13px;font-weight:700;
+    background:rgba(232,163,61,.14);
+    color:var(--amber);
+    border:1px solid rgba(232,163,61,.4);
+    padding:5px 12px;border-radius:999px;
+    white-space:nowrap;
+  }
+
+  /* ---------- screens ---------- */
+  .screen{display:none;animation:fadeUp .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+
+  /* ---------- home ---------- */
+  .hero{text-align:center;padding:34px 10px 26px;}
+  .hero .big-badge{
+    width:110px;height:110px;margin:0 auto 18px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--amber), var(--amber-deep));
+    display:flex;align-items:center;justify-content:center;font-size:56px;
+    box-shadow:0 0 0 6px rgba(232,163,61,.18), 0 0 0 12px rgba(232,163,61,.07), 0 14px 34px rgba(0,0,0,.45);
+  }
+  .hero h1{font-size:34px;line-height:1.1;font-weight:900;letter-spacing:-.01em;}
+  .hero h1 span{color:var(--amber);}
+  .hero .tagline{margin-top:8px;font-size:14px;color:var(--text-dim);}
+  .brief{
+    margin-top:22px;
+    background:var(--paper);
+    color:var(--text-on-paper);
+    border-radius:var(--card-radius);
+    padding:18px 18px 16px;
+    text-align:left;
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    border:1px solid var(--paper-edge);
+    position:relative;
+  }
+  .brief::before{
+    content:"MISSÃO CONFIDENCIAL";
+    position:absolute;top:-9px;left:16px;
+    background:var(--ink-deep);color:var(--amber);
+    font-family:"Courier New",Courier,monospace;
+    font-size:10px;font-weight:700;letter-spacing:.14em;
+    padding:3px 9px;border-radius:4px;
+  }
+  .brief p{font-size:14.5px;margin-top:8px;}
+  .brief p:first-of-type{margin-top:6px;}
+  .brief strong{color:#7A5410;}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:block;width:100%;
+    margin-top:20px;
+    background:linear-gradient(180deg,var(--amber),var(--amber-deep));
+    color:#241A05;font-weight:800;font-size:16px;
+    border:none;border-radius:12px;
+    padding:15px 18px;cursor:pointer;
+    letter-spacing:.02em;
+    box-shadow:0 6px 18px rgba(232,163,61,.3);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn:focus-visible, .opt:focus-visible{outline:3px solid #fff;outline-offset:2px;}
+  .btn.ghost{
+    background:transparent;color:var(--amber);
+    border:1.5px solid rgba(232,163,61,.5);
+    box-shadow:none;font-weight:700;
+  }
+
+  /* ---------- case screen ---------- */
+  .case-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;}
+  .case-num{
+    font-family:"Courier New",Courier,monospace;
+    font-size:12px;font-weight:700;color:var(--amber);
+    letter-spacing:.16em;
+  }
+  .case-title{font-size:20px;font-weight:800;}
+  .progress{
+    display:flex;gap:6px;margin:0 0 16px;
+  }
+  .progress .dot{
+    height:6px;flex:1;border-radius:99px;
+    background:rgba(255,255,255,.12);
+  }
+  .progress .dot.done{background:var(--amber);}
+  .progress .dot.now{background:rgba(232,163,61,.45);}
+
+  /* evidence card = the English text, styled as a phone post */
+  .evidence{
+    background:var(--paper);
+    color:var(--text-on-paper);
+    border-radius:var(--card-radius);
+    border:1px solid var(--paper-edge);
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    overflow:hidden;
+    position:relative;
+  }
+  .evidence .tape{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);
+    width:96px;height:20px;background:rgba(232,163,61,.55);
+    border-radius:2px;box-shadow:0 2px 5px rgba(0,0,0,.15);
+  }
+  .evidence .ev-label{
+    font-family:"Courier New",Courier,monospace;
+    font-size:10px;font-weight:700;letter-spacing:.16em;
+    color:#7A6A3F;
+    padding:14px 16px 0;
+  }
+  .post{
+    margin:10px 14px 14px;
+    background:#fff;border:1px solid #E4DCC8;border-radius:12px;
+    padding:13px 14px;
+    font-size:15px;color:#1C2430;
+    box-shadow:0 2px 6px rgba(0,0,0,.06);
+  }
+  .post .p-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+  .post .avatar{
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;background:#EAF0FA;flex-shrink:0;
+  }
+  .post .p-name{font-weight:700;font-size:13.5px;}
+  .post .p-meta{font-size:11px;color:#8A93A5;}
+  .post .p-body{line-height:1.55;}
+  .post .p-body p{margin-top:6px;}
+  .post .p-body p:first-child{margin-top:0;}
+  .chatline{display:flex;gap:8px;margin-top:8px;}
+  .chatline .who{font-weight:700;flex-shrink:0;}
+  .comment{
+    margin-top:8px;padding:9px 11px;border-radius:10px;
+    background:#F2F5FA;font-size:14px;
+  }
+  .comment .who{font-weight:700;font-size:12.5px;display:block;margin-bottom:2px;color:#41506B;}
+
+  /* question block */
+  .qblock{margin-top:20px;}
+  .qtext{font-size:16.5px;font-weight:700;margin-bottom:12px;}
+  .qtext .qtag{
+    font-family:"Courier New",Courier,monospace;
+    color:var(--amber);font-size:12px;letter-spacing:.12em;
+    display:block;margin-bottom:4px;font-weight:700;
+  }
+  .opt{
+    display:block;width:100%;text-align:left;
+    background:rgba(255,255,255,.05);
+    border:1.5px solid rgba(255,255,255,.14);
+    color:#EDEAE0;
+    border-radius:12px;
+    padding:13px 14px;margin-top:9px;
+    font-size:15px;cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{border-color:rgba(232,163,61,.6);}
+  .opt.correct{background:rgba(46,125,79,.22);border-color:var(--stamp-green);}
+  .opt.wrong{background:rgba(192,69,47,.2);border-color:var(--stamp-red);}
+  .opt:disabled{cursor:default;opacity:.85;}
+
+  /* feedback */
+  .feedback{
+    margin-top:14px;border-radius:12px;padding:14px 15px;
+    font-size:14.5px;display:none;animation:fadeUp .3s ease;
+  }
+  .feedback.show{display:block;}
+  .feedback.ok{background:rgba(46,125,79,.16);border:1px solid rgba(46,125,79,.55);}
+  .feedback.no{background:rgba(192,69,47,.14);border:1px solid rgba(192,69,47,.5);}
+  .feedback .stamp{
+    font-family:"Courier New",Courier,monospace;
+    font-weight:700;letter-spacing:.14em;font-size:12px;
+    display:inline-block;margin-bottom:6px;
+    padding:3px 8px;border-radius:4px;transform:rotate(-1.5deg);
+  }
+  .feedback.ok .stamp{background:var(--stamp-green);color:#fff;}
+  .feedback.no .stamp{background:var(--stamp-red);color:#fff;}
+  .feedback .clue{margin-top:8px;font-size:13.5px;color:#CBD2E0;}
+  .feedback .clue b{color:var(--amber);}
+
+  /* ---------- final ---------- */
+  .cert{
+    background:var(--paper);color:var(--text-on-paper);
+    border-radius:var(--card-radius);border:1px solid var(--paper-edge);
+    padding:26px 20px;text-align:center;
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+  }
+  .cert .seal{font-size:52px;}
+  .cert h2{font-size:23px;font-weight:900;margin-top:8px;}
+  .cert .rank{
+    display:inline-block;margin-top:10px;
+    font-family:"Courier New",Courier,monospace;font-weight:700;
+    letter-spacing:.1em;font-size:14px;
+    background:var(--ink);color:var(--amber);
+    padding:7px 14px;border-radius:6px;
+  }
+  .cert .final-score{margin-top:14px;font-size:15px;}
+  .cert .final-score b{font-size:26px;color:#7A5410;}
+  .badges{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .badges .b{
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;background:#fff;border:2px solid var(--paper-edge);
+  }
+  .badges .b.won{border-color:var(--amber-deep);background:#FFF6E3;box-shadow:0 0 0 3px rgba(197,127,27,.18);}
+  .badges .b.lost{filter:grayscale(1);opacity:.45;}
+  .cert .msg{margin-top:14px;font-size:14px;color:#5A5240;}
+
+  footer{
+    width:100%;max-width:520px;
+    padding:14px 16px 26px;text-align:center;
+    font-size:11.5px;color:var(--text-dim);
+  }
+  footer b{color:#B9C0CF;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge-mini" aria-hidden="true">🕵️</div>
+  <div>
+    <div class="htitle">Digital Detective</div>
+    <div class="hsub">Inglês na Cultura Digital · 6º–7º ano</div>
+  </div>
+  <div class="score-pill" id="scorePill" aria-live="polite">⭐ 0 pts</div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="screen active" id="scr-home">
+    <div class="hero">
+      <div class="big-badge" aria-hidden="true">🔍</div>
+      <h1>Digital <span>Detective</span></h1>
+      <p class="tagline">Investigue mensagens e posts em inglês. Resolva os 5 casos!</p>
+    </div>
+    <div class="brief">
+      <p><strong>Detetive,</strong> recebemos 5 casos misteriosos da internet — todos em <strong>inglês</strong>.</p>
+      <p>Sua missão: <strong>ler cada evidência com atenção</strong> e responder às perguntas da investigação. Cada resposta certa vale <strong>10 pontos</strong>.</p>
+      <p>Dica de detetive: você não precisa entender todas as palavras. Procure as <strong>pistas</strong>: nomes, números, emojis e palavras parecidas com o português! 🔎</p>
+    </div>
+    <button class="btn" id="btnStart">🕵️ Aceitar a missão</button>
+  </section>
+
+  <!-- CASE -->
+  <section class="screen" id="scr-case">
+    <div class="case-head">
+      <span class="case-num mono" id="caseNum">CASE #01</span>
+      <span class="case-title" id="caseTitle"></span>
+    </div>
+    <div class="progress" id="progressBar" aria-hidden="true"></div>
+
+    <div class="evidence">
+      <div class="tape" aria-hidden="true"></div>
+      <div class="ev-label mono">EVIDÊNCIA · EVIDENCE</div>
+      <div class="post" id="evidenceBox"></div>
+    </div>
+
+    <div class="qblock">
+      <div class="qtext"><span class="qtag mono" id="qTag"></span><span id="qText"></span></div>
+      <div id="optBox"></div>
+      <div class="feedback" id="fbBox" aria-live="polite"></div>
+      <button class="btn" id="btnNext" style="display:none;">Continuar ➜</button>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="scr-final">
+    <div class="cert">
+      <div class="seal" id="finalSeal">🏅</div>
+      <h2>Investigação concluída!</h2>
+      <div class="rank mono" id="finalRank"></div>
+      <div class="final-score">Pontuação final: <b id="finalScore"></b> / 100</div>
+      <div class="badges" id="badgeRow" aria-label="Distintivos conquistados"></div>
+      <p class="msg" id="finalMsg"></p>
+    </div>
+    <button class="btn" id="btnReplay">🔁 Jogar novamente</button>
+    <button class="btn ghost" id="btnHome">Voltar ao início</button>
+  </section>
+
+</main>
+
+<footer>
+  <b>Digital Detective</b> · Recurso Educacional Digital de Língua Inglesa<br>
+  Autoria: Marisa Cleff · Licença CC BY-SA 4.0 · Funciona offline, sem coleta de dados
+</footer>
+
+<script>
+"use strict";
+
+/* ================= DATA ================= */
+const CASES = [
+  {
+    title: "The New Student",
+    evidence: `
+      <div class="p-head">
+        <div class="avatar">🧑‍🎓</div>
+        <div><div class="p-name">alex_tor12</div><div class="p-meta">Profile · Bio</div></div>
+      </div>
+      <div class="p-body">
+        <p>Hi! I'm Alex. I'm 12 years old and I'm from Toronto, Canada. 🇨🇦</p>
+        <p>I love playing video games and basketball. 🏀🎮 My favorite subject is Science.</p>
+        <p>Follow me!</p>
+      </div>`,
+    questions: [
+      {
+        q: "Where is Alex from?",
+        opts: ["Canada", "Brazil", "England", "The United States"],
+        correct: 0,
+        okClue: "A evidência diz <b>“I'm from Toronto, Canada”</b>. O emoji da bandeira também era uma pista!",
+        noClue: "Releia a evidência e procure a palavra <b>from</b> (de/da). Logo depois dela vem o lugar: <b>Toronto, Canada</b>."
+      },
+      {
+        q: "What does Alex love?",
+        opts: ["Soccer and music", "Video games and basketball", "Science and math", "Drawing and reading"],
+        correct: 1,
+        okClue: "Isso mesmo: <b>“I love playing video games and basketball”</b>. A palavra <b>love</b> indica do que a pessoa gosta muito.",
+        noClue: "Procure a palavra <b>love</b> na evidência. O que vem depois dela? <b>Video games and basketball</b> — os emojis 🏀🎮 confirmam."
+      }
+    ]
+  },
+  {
+    title: "The Mysterious Invitation",
+    evidence: `
+      <div class="p-head">
+        <div class="avatar">💬</div>
+        <div><div class="p-name">Sofia</div><div class="p-meta">Message · Today, 10:22</div></div>
+      </div>
+      <div class="p-body">
+        <p>Hey Bia! Are you free on Saturday? It's my birthday! 🎂</p>
+        <p>The party is at my house at 3 p.m. Bring your swimsuit — we have a pool! 🏊</p>
+        <p>See you! — Sofia</p>
+      </div>`,
+    questions: [
+      {
+        q: "What is this message about?",
+        opts: ["A school test", "A birthday party", "A soccer game", "English homework"],
+        correct: 1,
+        okClue: "As pistas <b>birthday</b> 🎂 e <b>party</b> mostram o assunto: uma festa de aniversário. Identificar o assunto geral é o primeiro passo do detetive!",
+        noClue: "Olhe as pistas principais: <b>birthday</b> (aniversário), <b>party</b> (festa) e o emoji 🎂. Qual é o assunto do texto?"
+      },
+      {
+        q: "When is the party?",
+        opts: ["Sunday morning", "Friday night", "Saturday at 3 p.m.", "Today at noon"],
+        correct: 2,
+        okClue: "Perfeito! <b>Saturday</b> (sábado) + <b>3 p.m.</b> (15h). Dias da semana e horários são informações específicas que o detetive localiza rápido.",
+        noClue: "Procure o dia da semana e o horário na mensagem: <b>“on Saturday”</b> e <b>“at 3 p.m.”</b> (15 horas)."
+      }
+    ]
+  },
+  {
+    title: "Real or Fake?",
+    evidence: `
+      <div class="p-head">
+        <div class="avatar">⚠️</div>
+        <div><div class="p-name">mega.prizes.4u</div><div class="p-meta">Post · Shared 5,204 times</div></div>
+      </div>
+      <div class="p-body">
+        <p>🚨 CONGRATULATIONS!!! You WON a FREE smartphone! 📱</p>
+        <p>Click the link NOW and send this message to 10 friends!</p>
+        <p>Hurry! The offer ends in 5 minutes!!! ⏰</p>
+      </div>`,
+    questions: [
+      {
+        q: "What does this post want you to do?",
+        opts: ["Study English", "Click a link and share the message", "Buy a new phone", "Visit a friend"],
+        correct: 1,
+        okClue: "Exato: <b>“Click the link”</b> e <b>“send this message to 10 friends”</b>. Entender a intenção de um texto é uma habilidade essencial de leitura.",
+        noClue: "Observe os verbos de comando: <b>Click</b> (clique) e <b>send</b> (envie). O post quer que você clique num link e compartilhe."
+      },
+      {
+        q: "Detective, is this post real or fake?",
+        opts: ["Real — free phones are common on the internet", "Fake — free prize + pressure + “share now” are signs of a scam", "Real — it was shared 5,204 times", "Impossible to know"],
+        correct: 1,
+        okClue: "Excelente trabalho de detetive! 🕵️ Prêmio grátis + pressa (<b>“Hurry!”</b>, <b>“5 minutes”</b>) + pedido de compartilhamento = sinais clássicos de <b>golpe (scam)</b>. Nunca clique em links assim.",
+        noClue: "Cuidado! Prêmio grátis demais, pressa exagerada (<b>“Hurry!”</b>) e pedido para compartilhar são sinais clássicos de <b>golpe (scam)</b>. Muitos compartilhamentos não tornam um post verdadeiro."
+      }
+    ]
+  },
+  {
+    title: "The Comment Section",
+    evidence: `
+      <div class="p-head">
+        <div class="avatar">🎨</div>
+        <div><div class="p-name">nina.draws</div><div class="p-meta">Post · 1 hour ago</div></div>
+      </div>
+      <div class="p-body">
+        <p>My first drawing! What do you think? 🎨</p>
+        <div class="comment"><span class="who">Comment A — Théo</span>Wow, I love the colors! Great job! 👏</div>
+        <div class="comment"><span class="who">Comment B — anon_777</span>This is so ugly. Delete it.</div>
+        <div class="comment"><span class="who">Comment C — Lara</span>Nice! Maybe try more details next time 🙂</div>
+      </div>`,
+    questions: [
+      {
+        q: "Which comment is rude (grosseiro)?",
+        opts: ["Comment A", "Comment B", "Comment C", "None of them"],
+        correct: 1,
+        okClue: "Isso: <b>“This is so ugly. Delete it.”</b> é grosseiro e machuca. Na internet, palavras também têm consequências — isso se chama <b>netiqueta</b>.",
+        noClue: "Compare o tom dos comentários. <b>Ugly</b> significa “feio” e <b>“Delete it”</b> é uma ordem grosseira. O comentário B desrespeita a netiqueta."
+      },
+      {
+        q: "Which comments are kind and respectful?",
+        opts: ["Only A", "Only C", "A and C", "B and C"],
+        correct: 2,
+        okClue: "Muito bem! A elogia (<b>“Great job!”</b>) e C elogia e dá uma sugestão gentil (<b>“Maybe try…”</b>). Criticar com respeito também é possível!",
+        noClue: "O comentário A elogia (<b>“Great job!”</b>) e o C elogia e sugere com gentileza (<b>“Maybe try more details”</b>). Os dois respeitam a netiqueta."
+      }
+    ]
+  },
+  {
+    title: "The Group Chat",
+    evidence: `
+      <div class="p-head">
+        <div class="avatar">🎮</div>
+        <div><div class="p-name">Game Squad 👾</div><div class="p-meta">Group chat · 3 members</div></div>
+      </div>
+      <div class="p-body">
+        <div class="chatline"><span class="who">Leo:</span><span>I can't play online today 😞</span></div>
+        <div class="chatline"><span class="who">Maya:</span><span>Why not?</span></div>
+        <div class="chatline"><span class="who">Leo:</span><span>I have too much homework. I study from 6 to 8 p.m.</span></div>
+        <div class="chatline"><span class="who">Maya:</span><span>OK! Let's play tomorrow after school.</span></div>
+        <div class="chatline"><span class="who">Leo:</span><span>Perfect! 🎮</span></div>
+      </div>`,
+    questions: [
+      {
+        q: "Why can't Leo play today?",
+        opts: ["He is sick", "He has too much homework", "His internet is slow", "He doesn't like games"],
+        correct: 1,
+        okClue: "Certo! <b>“I have too much homework”</b> — muita lição de casa. A palavra <b>Why</b> (por quê) pede uma razão, e <b>because</b>/explicações são a resposta.",
+        noClue: "Maya pergunta <b>“Why not?”</b> (por que não?). A resposta de Leo é a razão: <b>“I have too much homework”</b> — muita lição de casa."
+      },
+      {
+        q: "When are they going to play?",
+        opts: ["Tonight at 8 p.m.", "Next Saturday", "Tomorrow after school", "They are not going to play"],
+        correct: 2,
+        okClue: "Investigação impecável: <b>“Let's play tomorrow after school”</b> — amanhã, depois da aula. Caso encerrado! 🕵️",
+        noClue: "Procure a proposta de Maya: <b>“Let's play tomorrow after school”</b> — amanhã (tomorrow), depois da escola (after school)."
+      }
+    ]
+  }
+];
+
+const RANKS = [
+  { min: 90, name: "MASTER DETECTIVE", seal: "🏆", msg: "Investigação perfeita! Você leu as evidências em inglês como um verdadeiro mestre. Caso encerrado com honras!" },
+  { min: 70, name: "DETECTIVE", seal: "🕵️", msg: "Ótimo trabalho! Você encontrou quase todas as pistas. Continue treinando seu olhar de detetive em inglês." },
+  { min: 50, name: "JUNIOR DETECTIVE", seal: "🔍", msg: "Bom começo, detetive! Releia as evidências dos casos e tente de novo — as pistas ficam mais claras a cada leitura." },
+  { min: 0,  name: "DETECTIVE IN TRAINING", seal: "📖", msg: "Todo grande detetive começa assim! Jogue novamente e use a dica: procure nomes, números, emojis e palavras parecidas com o português." }
+];
+
+/* ================= STATE ================= */
+let caseIdx = 0, qIdx = 0, score = 0;
+let caseHits = [];        // acertos por caso
+let answered = false;
+
+/* ================= ELEMENTS ================= */
+const $ = id => document.getElementById(id);
+const screens = { home: $("scr-home"), case: $("scr-case"), final: $("scr-final") };
+
+function show(name){
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function updateScore(){ $("scorePill").textContent = "⭐ " + score + " pts"; }
+
+/* ================= GAME FLOW ================= */
+function startGame(){
+  caseIdx = 0; qIdx = 0; score = 0;
+  caseHits = CASES.map(() => 0);
+  updateScore();
+  renderQuestion();
+  show("case");
+}
+
+function renderProgress(){
+  const bar = $("progressBar");
+  bar.innerHTML = "";
+  const totalQ = CASES.reduce((a,c)=>a+c.questions.length,0);
+  let count = 0;
+  CASES.forEach((c,ci)=>{
+    c.questions.forEach((q,qi)=>{
+      const d = document.createElement("div");
+      d.className = "dot";
+      const pos = count;
+      const current = getGlobalIndex();
+      if (pos < current) d.classList.add("done");
+      else if (pos === current) d.classList.add("now");
+      bar.appendChild(d);
+      count++;
+    });
+  });
+}
+function getGlobalIndex(){
+  let n = 0;
+  for (let i=0;i<caseIdx;i++) n += CASES[i].questions.length;
+  return n + qIdx;
+}
+
+function renderQuestion(){
+  answered = false;
+  const c = CASES[caseIdx];
+  const q = c.questions[qIdx];
+
+  $("caseNum").textContent = "CASE #0" + (caseIdx+1);
+  $("caseTitle").textContent = c.title;
+  $("evidenceBox").innerHTML = c.evidence;
+  $("qTag").textContent = "PERGUNTA " + (qIdx+1) + " DE " + c.questions.length;
+  $("qText").textContent = q.q;
+
+  const box = $("optBox");
+  box.innerHTML = "";
+  q.opts.forEach((opt,i)=>{
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.type = "button";
+    b.textContent = opt;
+    b.addEventListener("click", ()=>answer(i,b));
+    box.appendChild(b);
+  });
+
+  const fb = $("fbBox");
+  fb.className = "feedback";
+  fb.innerHTML = "";
+  $("btnNext").style.display = "none";
+  renderProgress();
+}
+
+function answer(i, btn){
+  if (answered) return;
+  answered = true;
+  const q = CASES[caseIdx].questions[qIdx];
+  const opts = document.querySelectorAll(".opt");
+  opts.forEach(o=>o.disabled = true);
+
+  const fb = $("fbBox");
+  if (i === q.correct){
+    btn.classList.add("correct");
+    score += 10;
+    caseHits[caseIdx]++;
+    updateScore();
+    fb.className = "feedback ok show";
+    fb.innerHTML = '<span class="stamp mono">✔ CASE CLUE FOUND</span><div>' +
+      '<b>Correct! +10 pontos.</b></div><div class="clue">🔎 ' + q.okClue + '</div>';
+  } else {
+    btn.classList.add("wrong");
+    opts[q.correct].classList.add("correct");
+    fb.className = "feedback no show";
+    fb.innerHTML = '<span class="stamp mono">✘ WRONG LEAD</span><div>' +
+      '<b>Quase! A resposta certa está marcada em verde.</b></div><div class="clue">🔎 ' + q.noClue + '</div>';
+  }
+  const isLast = (caseIdx === CASES.length-1) && (qIdx === CASES[caseIdx].questions.length-1);
+  $("btnNext").textContent = isLast ? "🏁 Encerrar investigação" : "Continuar ➜";
+  $("btnNext").style.display = "block";
+}
+
+function next(){
+  const c = CASES[caseIdx];
+  if (qIdx < c.questions.length - 1){ qIdx++; }
+  else if (caseIdx < CASES.length - 1){ caseIdx++; qIdx = 0; }
+  else { return finish(); }
+  renderQuestion();
+}
+
+function finish(){
+  const rank = RANKS.find(r => score >= r.min);
+  $("finalSeal").textContent = rank.seal;
+  $("finalRank").textContent = "RANK: " + rank.name;
+  $("finalScore").textContent = score;
+  $("finalMsg").textContent = rank.msg;
+
+  const row = $("badgeRow");
+  row.innerHTML = "";
+  const icons = ["🧑‍🎓","🎂","⚠️","🎨","🎮"];
+  caseHits.forEach((hits,i)=>{
+    const b = document.createElement("div");
+    b.className = "b " + (hits === 2 ? "won" : "lost");
+    b.title = "Case #0" + (i+1) + (hits===2 ? " — resolvido!" : " — pistas perdidas");
+    b.textContent = icons[i];
+    row.appendChild(b);
+  });
+  show("final");
+}
+
+/* ================= EVENTS ================= */
+$("btnStart").addEventListener("click", startGame);
+$("btnNext").addEventListener("click", next);
+$("btnReplay").addEventListener("click", startGame);
+$("btnHome").addEventListener("click", ()=>{ score=0; updateScore(); show("home"); });
+</script>
+</body>
+</html>
