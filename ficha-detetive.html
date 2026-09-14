@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha do Detetive — Digital Detective</title>
+<meta name="author" content="Marisa Cleff">
+<!--
+  ============================================================
+  FICHA DO DETETIVE — material complementar do RED
+  "Digital Detective: leitura investigativa em língua inglesa
+  na cultura digital"
+
+  Autoria: Marisa Cleff
+  Licença: CC BY-SA 4.0
+
+  TRÊS MODOS EM UM ARQUIVO
+  ------------------------------------------------------------
+  A barra de controles no topo (que NÃO aparece na impressão)
+  permite alternar entre:
+    1. Versão padrão      - para impressão e escrita à mão
+    2. Versão ampliada    - fonte maior, mais espaço de escrita,
+                            menos elementos decorativos
+                            (estudantes com baixa visão)
+    3. Modo editável      - campos preenchíveis no computador
+                            (estudantes com dificuldade de
+                            escrita manual)
+
+  Para gerar o PDF de cada versão: escolha o modo desejado e use
+  Imprimir > Salvar como PDF. Desmarque a opção de cabeçalhos e
+  rodapés do navegador para que a data e o caminho do arquivo não
+  apareçam na folha.
+
+  O modo editável não salva nem envia nada: o texto digitado
+  existe apenas na tela até ser impresso ou salvo em PDF.
+  ============================================================
+-->
+<style>
+  :root{
+    --cream:#F5EDD8;
+    --cream-soft:#F2E9D2;
+    --navy:#17223A;
+    --navy-soft:#1E2C49;
+    --amber:#E8A33D;
+    --amber-deep:#A96E10;
+    --ink:#24200F;
+    --line:#C9BB96;
+    --fs:1;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:#E6DCC2;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:calc(15px * var(--fs));
+    line-height:1.5;
+    padding:18px 12px 40px;
+  }
+  .mono{font-family:"Courier New",Courier,monospace;}
+
+  /* ---------- barra de controles (não imprime) ---------- */
+  .controls{
+    max-width:820px;margin:0 auto 16px;
+    background:var(--navy);color:#F3EFE4;
+    border-radius:12px;padding:12px 14px;
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  }
+  .controls .lbl{
+    font-size:.78rem;letter-spacing:.1em;font-weight:700;
+    color:var(--amber);text-transform:uppercase;margin-right:4px;
+  }
+  .controls button{
+    min-height:42px;padding:9px 14px;
+    font-size:.85rem;font-weight:700;cursor:pointer;
+    background:rgba(255,255,255,.1);color:#F3EFE4;
+    border:2px solid rgba(255,255,255,.35);border-radius:9px;
+  }
+  .controls button[aria-pressed="true"]{
+    background:var(--amber);color:#2A1B02;border-color:var(--amber);
+  }
+  .controls button:focus-visible{outline:3px solid #7FD4FF;outline-offset:2px;}
+  .controls .hint{
+    flex-basis:100%;font-size:.76rem;color:#C7CEDC;margin-top:2px;
+  }
+
+  /* ---------- folha ---------- */
+  .sheet{
+    max-width:820px;margin:0 auto 18px;
+    background:var(--cream);
+    padding:34px 38px 26px;
+    border-radius:6px;
+    box-shadow:0 6px 22px rgba(0,0,0,.16);
+  }
+
+  /* cabeçalho */
+  .head{
+    display:flex;align-items:center;gap:16px;
+    padding-bottom:14px;border-bottom:3px solid var(--navy);
+  }
+  .emblem{
+    width:60px;height:60px;border-radius:50%;flex-shrink:0;
+    background:var(--amber);border:3px solid var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.8rem;
+  }
+  .head h1{
+    font-family:"Courier New",Courier,monospace;
+    font-size:1.9rem;font-weight:700;letter-spacing:.02em;color:var(--navy);
+  }
+  .head h1 .accent{color:var(--amber-deep);}
+  .head .sub{font-size:.82rem;color:#6A6144;margin-top:2px;}
+  .score{
+    margin-left:auto;text-align:center;flex-shrink:0;
+    border:2px dashed var(--amber-deep);border-radius:10px;
+    padding:8px 16px;background:var(--cream-soft);
+  }
+  .score .val{
+    font-family:"Courier New",Courier,monospace;
+    font-size:1.05rem;font-weight:700;color:var(--navy);white-space:nowrap;
+  }
+  .score .cap{
+    font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:#8A7C57;margin-top:2px;
+  }
+
+  /* identificação */
+  .idbox{
+    margin-top:18px;border:2px dashed var(--navy);border-radius:10px;
+    padding:14px 16px 10px;display:flex;gap:24px;flex-wrap:wrap;
+  }
+  .idbox .field{flex:1;min-width:190px;}
+  .idbox .cap{
+    font-family:"Courier New",Courier,monospace;
+    font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--navy);
+  }
+  .idbox .cap em{color:#7A6F4E;font-weight:400;}
+  .writeline{
+    border-bottom:1.5px solid var(--navy);
+    height:calc(26px * var(--fs));margin-top:6px;
+  }
+
+  /* missão */
+  .mission{
+    margin-top:18px;background:var(--navy);color:#EDE7D6;
+    border-radius:10px;padding:16px 18px;
+  }
+  .mission h2{
+    font-family:"Courier New",Courier,monospace;
+    font-size:.78rem;letter-spacing:.22em;color:var(--amber);
+    text-transform:uppercase;margin-bottom:8px;
+  }
+  .mission p{font-size:.88rem;}
+  .mission p.pt{font-style:italic;color:#C3BCA6;margin-top:6px;}
+  .mission strong{color:#fff;}
+
+  /* seção */
+  .sectitle{
+    margin:22px 0 10px;
+    font-family:"Courier New",Courier,monospace;
+    font-size:1.1rem;font-weight:700;color:var(--navy);
+  }
+  .sectitle em{font-family:inherit;font-size:.78rem;color:#7A6F4E;font-style:italic;}
+
+  /* casos */
+  .case{
+    border:2px solid var(--navy);border-radius:10px;
+    overflow:hidden;margin-bottom:12px;background:var(--cream-soft);
+  }
+  .case .chead{
+    background:var(--navy);color:var(--cream);
+    padding:7px 14px;display:flex;align-items:center;
+    font-family:"Courier New",Courier,monospace;
+    font-size:.88rem;font-weight:700;letter-spacing:.08em;
+  }
+  .case .chead .right{
+    margin-left:auto;font-size:.68rem;font-weight:400;
+    color:#B9B19A;letter-spacing:.04em;font-style:italic;
+  }
+  .case .cbody{display:flex;gap:18px;padding:11px 14px 13px;flex-wrap:wrap;}
+  .case .col{flex:1;min-width:210px;}
+  .case .col .cap{
+    font-size:.68rem;font-weight:800;letter-spacing:.06em;
+    color:var(--amber-deep);text-transform:uppercase;margin-bottom:5px;
+  }
+  .case .col .cap em{color:#7A6F4E;font-weight:400;text-transform:none;letter-spacing:0;}
+  .dashline{
+    border-bottom:1.5px dashed #A89B77;
+    height:calc(24px * var(--fs));
+  }
+
+  /* notas */
+  .notesbox{
+    border:2px solid var(--navy);border-radius:10px;
+    background:var(--cream-soft);padding:10px 14px;
+  }
+  .ruled{border-bottom:1px solid #DCD0AE;height:calc(28px * var(--fs));}
+  .ruled:last-child{border-bottom:none;}
+
+  /* dicas */
+  .tips{
+    margin-top:20px;background:var(--navy);color:#EDE7D6;
+    border-radius:10px;padding:16px 18px;
+  }
+  .tips h2{
+    font-family:"Courier New",Courier,monospace;
+    font-size:.82rem;letter-spacing:.16em;color:var(--amber);
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  .tips li{
+    list-style:none;font-size:.85rem;margin-bottom:7px;
+    padding-left:18px;position:relative;color:#C9C2AD;
+  }
+  .tips li::before{
+    content:"\25B8";position:absolute;left:0;color:var(--amber);
+  }
+  .tips li b{color:#fff;}
+
+  /* distintivo */
+  .badgecut{
+    margin:14px auto 0;max-width:330px;
+    border:3px dashed var(--amber-deep);border-radius:14px;
+    padding:20px 16px;text-align:center;background:var(--cream-soft);
+  }
+  .badgecut .circle{
+    width:86px;height:86px;margin:0 auto 12px;border-radius:50%;
+    background:var(--amber);border:4px solid var(--navy);
+    display:flex;align-items:center;justify-content:center;font-size:2.4rem;
+  }
+  .badgecut .name{
+    font-family:"Courier New",Courier,monospace;
+    font-size:1rem;font-weight:700;color:var(--navy);letter-spacing:.04em;
+  }
+  .badgecut .sig{
+    border-bottom:1.5px solid var(--navy);
+    height:calc(28px * var(--fs));margin:16px 22px 5px;
+  }
+  .badgecut .cap{font-size:.7rem;color:#7A6F4E;}
+
+  /* rodapé */
+  .foot{
+    margin-top:22px;padding-top:11px;border-top:2px solid var(--navy);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-size:.68rem;color:#7A6F4E;
+  }
+
+  /* ---------- modo ampliado ---------- */
+  body.big{ --fs:1.35; }
+  body.big .sheet{padding:30px 26px 24px;}
+  body.big .emblem,
+  body.big .badgecut .circle{display:none;}      /* menos elementos decorativos */
+  body.big .mission p.pt{font-style:normal;color:#D6D0BD;}
+  body.big .case .chead .right{display:none;}
+  body.big .dashline{border-bottom-style:solid;border-color:#8C7F5C;}
+  body.big .ruled{border-color:#B9AA84;}
+
+  /* ---------- modo editável ---------- */
+  .fill{display:none;}
+  body.edit .writeline,
+  body.edit .dashline,
+  body.edit .ruled,
+  body.edit .badgecut .sig{display:none;}
+  body.edit .fill{
+    display:block;width:100%;
+    font-family:inherit;font-size:calc(15px * var(--fs));
+    color:var(--ink);line-height:1.6;
+    background:#FFFCF2;border:1.5px solid var(--line);border-radius:6px;
+    padding:7px 9px;margin-top:4px;resize:vertical;
+  }
+  .fill:focus{outline:3px solid var(--amber-deep);outline-offset:1px;}
+  textarea.fill{min-height:calc(56px * var(--fs));}
+  input.fill{min-height:calc(38px * var(--fs));}
+
+  /* ---------- impressão ---------- */
+  @page{ size:A4; margin:12mm; }
+  @media print{
+    body{background:#fff;padding:0;}
+    .controls{display:none !important;}
+    .sheet{box-shadow:none;margin:0;max-width:none;padding:0;border-radius:0;}
+    .pagebreak{break-before:page;page-break-before:always;}
+    .case,.notesbox,.tips,.badgecut,.mission{break-inside:avoid;page-break-inside:avoid;}
+    .fill{background:#fff;border-color:#999;}
+  }
+</style>
+</head>
+<body>
+
+<!-- barra de controles: aparece na tela, nunca na impressão -->
+<div class="controls" role="group" aria-label="Opções da ficha">
+  <span class="lbl">Versão</span>
+  <button type="button" id="bPadrao" aria-pressed="true">Padrão</button>
+  <button type="button" id="bAmpliada" aria-pressed="false">Ampliada</button>
+  <span class="lbl" style="margin-left:10px;">Preenchimento</span>
+  <button type="button" id="bEdit" aria-pressed="false">Modo editável</button>
+  <button type="button" id="bPrint" style="margin-left:auto;">Imprimir / Salvar PDF</button>
+  <p class="hint">Ao imprimir, desmarque a opção de cabeçalhos e rodapés do navegador. No modo editável o texto não é salvo: imprima ou salve em PDF ao terminar.</p>
+</div>
+
+<!-- ===================== FOLHA 1 ===================== -->
+<div class="sheet">
+
+  <div class="head">
+    <div class="emblem" aria-hidden="true">🕵️</div>
+    <div>
+      <h1>Digital <span class="accent">Detective</span></h1>
+      <p class="sub">Detective's Case File · Ficha do Detetive · Inglês na Cultura Digital · 6º e 7º ano</p>
+    </div>
+    <div class="score">
+      <p class="val">★ _____ pts</p>
+      <p class="cap">total score</p>
+    </div>
+  </div>
+
+  <div class="idbox">
+    <div class="field">
+      <p class="cap mono">DETECTIVE NAME <em>/ nome do detetive</em></p>
+      <div class="writeline"></div>
+      <input class="fill" type="text" aria-label="Nome do detetive">
+    </div>
+    <div class="field" style="max-width:220px;">
+      <p class="cap mono">DATE <em>/ data</em></p>
+      <div class="writeline"></div>
+      <input class="fill" type="text" aria-label="Data">
+    </div>
+  </div>
+
+  <div class="mission">
+    <h2>Top secret mission</h2>
+    <p><strong>Detective,</strong> we received 5 mysterious cases from the internet, all in English. Your mission: <strong>read each clue carefully</strong> and answer the questions.</p>
+    <p class="pt">Sua missão: leia cada pista com atenção e responda às perguntas. Anote suas descobertas aqui!</p>
+  </div>
+
+  <h2 class="sectitle mono">The 5 Cases <em>/ os 5 casos</em></h2>
+
+  <div id="caseList"></div>
+
+  <div class="foot">
+    <span>Digital Detective · Recurso Educacional Digital de Língua Inglesa · CC BY-SA 4.0</span>
+    <span>Profa. Marisa Cleff</span>
+  </div>
+</div>
+
+<!-- ===================== FOLHA 2 ===================== -->
+<div class="sheet pagebreak">
+
+  <div class="head">
+    <div class="emblem" aria-hidden="true">🕵️</div>
+    <div>
+      <h1>Detective's <span class="accent">Notes</span></h1>
+      <p class="sub">Anotações livres do detetive · New words, clues &amp; discoveries</p>
+    </div>
+  </div>
+
+  <h2 class="sectitle mono">New Words I Learned <em>/ palavras novas que aprendi</em></h2>
+  <div class="notesbox">
+    <div class="ruled"></div><div class="ruled"></div><div class="ruled"></div>
+    <div class="ruled"></div><div class="ruled"></div>
+    <textarea class="fill" rows="5" aria-label="Palavras novas que aprendi"></textarea>
+  </div>
+
+  <h2 class="sectitle mono">Free Investigation Notes <em>/ anotações livres da investigação</em></h2>
+  <div class="notesbox">
+    <div class="ruled"></div><div class="ruled"></div><div class="ruled"></div>
+    <div class="ruled"></div><div class="ruled"></div><div class="ruled"></div>
+    <textarea class="fill" rows="6" aria-label="Anotações livres da investigação"></textarea>
+  </div>
+
+  <div class="tips">
+    <h2>Detective tips · Dicas do detetive</h2>
+    <ul>
+      <li><b>You don't need to understand every word.</b> Você não precisa entender todas as palavras.</li>
+      <li><b>Look for clues:</b> names, numbers, emojis and words similar to Portuguese. Procure pistas: nomes, números, emojis e palavras parecidas com o português.</li>
+      <li><b>Read twice.</b> Leia duas vezes antes de responder.</li>
+      <li><b>Trust your detective instinct!</b> Confie no seu instinto de detetive!</li>
+    </ul>
+  </div>
+
+  <h2 class="sectitle mono">Cut Your Detective Badge <em>/ recorte seu distintivo</em></h2>
+  <div class="badgecut">
+    <div class="circle" aria-hidden="true">🕵️</div>
+    <p class="name">OFFICIAL DIGITAL DETECTIVE</p>
+    <div class="sig"></div>
+    <input class="fill" type="text" aria-label="Nome do detetive no distintivo">
+    <p class="cap">Detective Name / Nome do Detetive</p>
+  </div>
+
+  <div class="foot">
+    <span>Digital Detective · Recurso Educacional Digital de Língua Inglesa · CC BY-SA 4.0</span>
+    <span>Profa. Marisa Cleff</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* monta os cinco casos */
+var lista = document.getElementById("caseList");
+for (var n = 1; n <= 5; n++){
+  var id = (n < 10 ? "0" : "") + n;
+  var d = document.createElement("div");
+  d.className = "case";
+  d.innerHTML =
+    '<div class="chead"><span>CASE #' + id + '</span><span class="right">clues / pistas</span></div>' +
+    '<div class="cbody">' +
+      '<div class="col">' +
+        '<p class="cap">Clues I found <em>/ pistas que encontrei</em></p>' +
+        '<div class="dashline"></div><div class="dashline"></div>' +
+        '<textarea class="fill" rows="2" aria-label="Pistas que encontrei no caso ' + n + '"></textarea>' +
+      '</div>' +
+      '<div class="col">' +
+        '<p class="cap">My answer <em>/ minha resposta</em></p>' +
+        '<div class="dashline"></div><div class="dashline"></div>' +
+        '<textarea class="fill" rows="2" aria-label="Minha resposta no caso ' + n + '"></textarea>' +
+      '</div>' +
+    '</div>';
+  lista.appendChild(d);
+}
+
+/* controles */
+var bP = document.getElementById("bPadrao"),
+    bA = document.getElementById("bAmpliada"),
+    bE = document.getElementById("bEdit");
+
+function versao(grande){
+  document.body.classList.toggle("big", grande);
+  bA.setAttribute("aria-pressed", grande ? "true" : "false");
+  bP.setAttribute("aria-pressed", grande ? "false" : "true");
+}
+bP.addEventListener("click", function(){ versao(false); });
+bA.addEventListener("click", function(){ versao(true); });
+bE.addEventListener("click", function(){
+  var on = document.body.classList.toggle("edit");
+  bE.setAttribute("aria-pressed", on ? "true" : "false");
+});
+document.getElementById("bPrint").addEventListener("click", function(){ window.print(); });
+</script>
+</body>
+</html>
